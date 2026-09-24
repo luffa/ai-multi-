@@ -90,8 +90,8 @@ notepad .env
 อย่างน้อย:
 
 ```env
-STUDENT_SLUG=userNN
-SITE_URL=https://userNN.9expert.online
+STUDENT_SLUG=user28
+SITE_URL=https://user28.9expert.online
 GITHUB_PERSONAL_ACCESS_TOKEN=github_pat_...
 CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
 ```

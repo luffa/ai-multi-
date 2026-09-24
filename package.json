@@ -15,7 +15,8 @@
     "test:labs": "vitest run --config vitest.labs.config.ts",
     "test:e2e": "playwright test",
     "start": "node ./dist/server/entry.mjs",
-    "create-issues": "node scripts/create-course-issues.mjs"
+    "create-issues": "node scripts/create-course-issues.mjs",
+    "sync:mcp": "node scripts/sync-mcp.mjs"
   },
   "dependencies": {
     "@astrojs/node": "^11.1.6",
