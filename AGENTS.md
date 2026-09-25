@@ -39,6 +39,7 @@
 |---|---|
 | UI (`src/pages/*.astro`, `src/layouts/`, styles) | Claude · agent `frontend` |
 | API + SQLite (`src/lib/db.ts`, `src/pages/api/*`) | OpenCode · agent `backend` |
+| Profile loader (`src/lib/profile.ts`) | Claude · agent `frontend` — type `Profile` = สัญญาร่วม: เพิ่มฟิลด์ได้ · เปลี่ยน/ลบฟิลด์เดิมต้องแจ้งใน handoff (D14) |
 | E2E / a11y (`docs/QA.md`) | Playwright MCP + either CLI |
 | Profile / debate docs | Claude (Lab 01–02 · subagents) |
 | Hot state (`STATUS.md` · `OPEN_LOOPS.md`) | ผู้ถืองานรอบนั้น (single-writer) |
