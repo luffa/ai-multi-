@@ -36,3 +36,4 @@ instructor/
 # oh-my-openagent (OpenCode plugin) — เก็บเฉพาะ config · runtime/backup ไม่ commit
 .omo/*
 !.omo/omo.jsonc
+.envrc
