@@ -1,19 +1,10 @@
 import type { APIRoute } from 'astro';
 import { insertGuestbook, listGuestbook } from '../../lib/db';
+import { createRateLimiter, resolveClientKey } from '../../lib/rate-limit';
 
 export const prerender = false;
 
-const RATE_LIMIT_WINDOW_MS = 60_000;
-const RATE_LIMIT_MAX = 5;
-const hits = new Map<string, number[]>();
-
-function isRateLimited(key: string): boolean {
-  const now = Date.now();
-  const recent = (hits.get(key) ?? []).filter((t) => now - t < RATE_LIMIT_WINDOW_MS);
-  recent.push(now);
-  hits.set(key, recent);
-  return recent.length > RATE_LIMIT_MAX;
-}
+const limiter = createRateLimiter({ windowMs: 60_000, max: 5 });
 
 export const GET: APIRoute = async () => {
   try {
@@ -40,14 +31,9 @@ export const GET: APIRoute = async () => {
 };
 
 export const POST: APIRoute = async ({ request, clientAddress }) => {
-  let clientKey = 'unknown';
-  try {
-    clientKey = clientAddress ?? 'unknown';
-  } catch {
-    clientKey = 'unknown';
-  }
+  const clientKey = resolveClientKey(request, clientAddress);
 
-  if (isRateLimited(clientKey)) {
+  if (limiter.isRateLimited(clientKey)) {
     return new Response(JSON.stringify({ error: 'rate limited' }), {
       status: 429,
       headers: { 'content-type': 'application/json' },

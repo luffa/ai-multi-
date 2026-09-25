@@ -90,7 +90,7 @@ export function listGuestbook(): GuestbookEntry[] {
   const database = getDb();
   const rows = database
     .prepare(
-      `SELECT id, name, message, created_at FROM guestbook ORDER BY id DESC`,
+      `SELECT id, name, message, created_at FROM guestbook ORDER BY id DESC LIMIT 50`,
     )
     .all() as GuestbookEntry[];
   return rows;
