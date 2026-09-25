@@ -3,8 +3,8 @@
 > Lab 04 → Lab 05 · อ่านคู่กับ `docs/STATUS.md` · `docs/OPEN_LOOPS.md` · `docs/DECISIONS.md`
 
 Timestamp: 2026-09-25 12:15 +07:00  
-Task: Lab 04 Frontend — issues #1 #2 #3 #4 #5 #7 (branch `lab-04-frontend`, commit `870ff23`)  
-Status: NEEDS_REVIEW (PR `[Lab 04] Frontend pages`)
+Task: Lab 04 Frontend — closes #1 #2 #4 #5 · refs #3 (ตรวจ contrast ซ้ำใน Lab 06) #7 (เหลือเจ้าของตรวจบัญชี GitHub ก่อน ship) · branch `lab-04-frontend`  
+Status: NEEDS_REVIEW — [PR #8](https://github.com/luffa/ai-multi-/pull/8)
 
 ## What changed
 

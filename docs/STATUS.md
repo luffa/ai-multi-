@@ -16,11 +16,11 @@ Updated by: Claude (ส่งต่อให้ OpenCode · Lab 05)
 - Lab 01: สัมภาษณ์ 9 ข้อ → `docs/PROFILE.md` + Knowledge 6 เรื่อง (เรื่องละ 2 ลิงก์) + `## Brainstorm` (`a749675`, `389ac71`)
 - Lab 02: subagents 3 บทบาท → `docs/DEBATE.md` · เจ้าของตัดสินข้อขัดแย้ง → `docs/DECISIONS.md` D1–D13 (`55048d4`)
 - Lab 03: GitHub MCP สร้าง issues #1–#7 จาก D-id · ตาราง + `## Lab 03 — MCP vs gh` ท้าย `DECISIONS.md`
-- Lab 04: branch `lab-04-frontend` (`870ff23`) ทำ issues #1 #2 #3 #4 #5 #7 · D14 = `profile.ts` เป็นของ Claude/frontend · `npm test` 8/8 + build + e2e 2/2 ผ่าน · PR `[Lab 04] Frontend pages`
+- Lab 04: branch `lab-04-frontend` (`870ff23`) closes #1 #2 #4 #5 · refs #3 #7 · D14 = `profile.ts` เป็นของ Claude/frontend · `npm test` 8/8 + build + e2e 2/2 ผ่าน · PR #8
 
 ## In progress
 
-- PR Lab 04 รอ review/merge
+- PR #8 (Lab 04) รอ review/merge
 
 ## Blocked
 
@@ -30,7 +30,7 @@ Updated by: Claude (ส่งต่อให้ OpenCode · Lab 05)
 
 1. **OpenCode (Lab 05)**: อ่าน `docs/handoffs/04-claude-to-opencode.md` → implement `src/lib/db.ts` + issue #6 · ห้ามแก้ UI
 2. รัน `test:labs` ด้วย Node ≥ 22.23 (`nvm use 22.23.3`) — ถ้าใช้ Node 22.13.1 ที่เป็น default จะ SIGSEGV
-3. merge PR Lab 04 เข้า `main` ก่อนหรือพร้อมกับ Lab 05 เพื่อลดโอกาส conflict
+3. merge PR #8 เข้า `main` ก่อนหรือพร้อมกับ Lab 05 เพื่อลดโอกาส conflict
 
 ## Files changed in latest session
 
