@@ -14,27 +14,30 @@ const { title = 'Personal Site', description = 'Personal branding site for the m
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
     <style is:global>
+      /* Tone ตาม docs/DECISIONS.md D9: ขาวเป็นพื้น · แดงเน้น · ชมพูรองแบบเบา (ไม่ใช้ชมพูเป็นตัวหนังสือ) */
       :root {
-        --bg: #0b1020;
-        --card: #141a2f;
-        --text: #eef2ff;
-        --muted: #a5b4d4;
-        --accent: #7c9cff;
-        --border: #243056;
+        --bg: #ffffff;
+        --card: #fdf2f6;
+        --text: #1f2937;
+        --muted: #4b5563;
+        --accent: #b91c1c;
+        --on-accent: #ffffff;
+        --border: #f5c2d3;
       }
       * { box-sizing: border-box; }
       body {
         margin: 0;
         font-family: "Segoe UI", system-ui, sans-serif;
-        background: radial-gradient(circle at top, #17203a, var(--bg) 45%);
+        background: var(--bg);
         color: var(--text);
         min-height: 100vh;
       }
       a { color: var(--accent); text-decoration: none; }
       a:hover { text-decoration: underline; }
+      :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
       main { width: min(920px, 92vw); margin: 0 auto; padding: 2rem 0 4rem; }
       .card {
-        background: color-mix(in srgb, var(--card) 92%, white 8%);
+        background: var(--card);
         border: 1px solid var(--border);
         border-radius: 16px;
         padding: 1.25rem 1.5rem;
@@ -46,28 +49,40 @@ const { title = 'Personal Site', description = 'Personal branding site for the m
         border-bottom: 1px solid var(--border);
       }
       nav a { color: var(--muted); font-weight: 600; }
-      nav a[aria-current="page"] { color: var(--text); }
+      nav a[aria-current="page"] { color: var(--accent); }
       h1, h2 { line-height: 1.2; }
       p, li { color: var(--muted); line-height: 1.6; }
       input, textarea, button {
-        font: inherit; border-radius: 10px; border: 1px solid var(--border);
-        background: #0f1528; color: var(--text); padding: 0.7rem 0.9rem; width: 100%;
+        font: inherit; border-radius: 10px; border: 1px solid var(--muted);
+        background: var(--bg); color: var(--text); padding: 0.7rem 0.9rem; width: 100%;
       }
-      button { background: var(--accent); color: #081018; font-weight: 700; cursor: pointer; width: auto; }
+      button { background: var(--accent); border-color: var(--accent); color: var(--on-accent); font-weight: 700; cursor: pointer; width: auto; }
       label { display: block; margin: 0.75rem 0 0.35rem; color: var(--text); font-weight: 600; }
       .grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+      .button { display: inline-block; padding: 0.6rem 1.1rem; border-radius: 10px; border: 1px solid var(--accent); font-weight: 700; }
+      .button.primary { background: var(--accent); color: var(--on-accent); }
+      .actions { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1rem; }
+      footer {
+        width: min(920px, 92vw); margin: 0 auto; padding: 1.25rem 0 2rem;
+        border-top: 1px solid var(--border); font-size: 0.9rem;
+      }
+      footer p { margin: 0.25rem 0; }
     </style>
   </head>
   <body>
+    <!-- เมนูหลัก 4 หน้า (D7) · Guestbook อยู่ที่ footer -->
     <nav aria-label="หลัก">
-      <a href="/" aria-current={Astro.url.pathname === '/' ? 'page' : undefined}>Home</a>
-      <a href="/about" aria-current={Astro.url.pathname.startsWith('/about') ? 'page' : undefined}>About</a>
-      <a href="/interests" aria-current={Astro.url.pathname.startsWith('/interests') ? 'page' : undefined}>Interests</a>
-      <a href="/contact" aria-current={Astro.url.pathname.startsWith('/contact') ? 'page' : undefined}>Contact</a>
-      <a href="/guestbook" aria-current={Astro.url.pathname.startsWith('/guestbook') ? 'page' : undefined}>Guestbook</a>
+      <a href="/" aria-current={Astro.url.pathname === '/' ? 'page' : undefined}>หน้าแรก</a>
+      <a href="/about" aria-current={Astro.url.pathname.startsWith('/about') ? 'page' : undefined}>เกี่ยวกับผม</a>
+      <a href="/interests" aria-current={Astro.url.pathname.startsWith('/interests') ? 'page' : undefined}>เทคโนโลยีที่ใช้</a>
+      <a href="/contact" aria-current={Astro.url.pathname.startsWith('/contact') ? 'page' : undefined}>ติดต่อ</a>
     </nav>
     <main>
       <slot />
     </main>
+    <footer>
+      <p><a href="/guestbook" aria-current={Astro.url.pathname.startsWith('/guestbook') ? 'page' : undefined}>สมุดเยี่ยม (Guestbook)</a></p>
+      <p>เนื้อหาในเว็บนี้เป็นความเห็นส่วนตัว ไม่ได้พูดแทนมหาวิทยาลัย</p>
+    </footer>
   </body>
 </html>

@@ -3,14 +3,51 @@ export const prerender = false;
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { loadProfile } from '../lib/profile';
 const profile = loadProfile();
----
-<BaseLayout title={`Interests · ${profile.name}`}>
-  <section class="card">
-    <h1>Interests</h1>
-    <ul>
-      {profile.interests.map((item) => <li>{item}</li>)}
-    </ul>
-    <p>Lab 04: ดึงจาก content collection หรือ API `/api/interests`</p>
-  </section>
-</BaseLayout>
 
+// จัดกลุ่มตาม D4 · รายชื่อยังมาจาก ## Interests — ตัวที่ไม่อยู่ในกลุ่มไหนจะไปอยู่ "อื่น ๆ"
+const GROUPS: { title: string; items: string[] }[] = [
+  { title: 'ฐานข้อมูล', items: ['Oracle'] },
+  { title: 'แอปพลิเคชัน', items: ['.NET', 'JavaScript'] },
+  { title: 'เซิร์ฟเวอร์', items: ['Linux', 'Docker', 'k8s'] },
+];
+const key = (s: string) => s.trim().toLowerCase();
+const grouped = new Set(GROUPS.flatMap((g) => g.items.map(key)));
+const groups = [
+  ...GROUPS.map((g) => ({ title: g.title, items: profile.interests.filter((i) => g.items.map(key).includes(key(i))) })),
+  { title: 'อื่น ๆ', items: profile.interests.filter((i) => !grouped.has(key(i))) },
+].filter((g) => g.items.length);
+const knowledgeFor = (name: string) => profile.knowledge.find((k) => key(k.title) === key(name));
+---
+<BaseLayout title={`เทคโนโลยีที่ใช้ · ${profile.name}`}>
+  <h1>เทคโนโลยีที่ใช้</h1>
+  <p>สรุปสั้น ๆ จากเอกสารทางการ พร้อมบทความให้อ่านต่อ</p>
+  {groups.map((group) => (
+    <section>
+      <h2>{group.title}</h2>
+      <div class="grid">
+        {group.items.map((name) => {
+          const k = knowledgeFor(name);
+          return (
+            <article class="card">
+              <h3>{name}</h3>
+              {k?.summary && <p>{k.summary}</p>}
+              {k?.readMore && (
+                <p><a href={k.readMore} target="_blank" rel="noopener noreferrer">เอกสารทางการ</a></p>
+              )}
+              {k && k.articles.length > 0 && (
+                <ul>
+                  {k.articles.map((a) => (
+                    <li>
+                      <a href={a.url} target="_blank" rel="noopener noreferrer">{a.title}</a>
+                      {a.note && <> — {a.note}</>}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </article>
+          );
+        })}
+      </div>
+    </section>
+  ))}
+</BaseLayout>
