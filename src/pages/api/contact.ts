@@ -16,10 +16,17 @@ export const POST: APIRoute = async ({ request }) => {
       headers: { 'content-type': 'application/json' },
     });
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'error';
-    const status = message.startsWith('NOT_IMPLEMENTED') ? 501 : 400;
+    const raw = err instanceof Error ? err.message : 'error';
+    if (raw.startsWith('NOT_IMPLEMENTED')) {
+      return new Response(JSON.stringify({ error: raw }), {
+        status: 501,
+        headers: { 'content-type': 'application/json' },
+      });
+    }
+    // Never leak raw SQL / stack / internal error text (D11 · #6).
+    const message = raw.startsWith('VALIDATION') ? raw : 'invalid request';
     return new Response(JSON.stringify({ error: message }), {
-      status,
+      status: 400,
       headers: { 'content-type': 'application/json' },
     });
   }
