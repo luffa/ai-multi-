@@ -66,3 +66,19 @@ Status: IMPLEMENTED
 ## Single-writer note
 
 Writer รอบถัดไปของ STATUS/OPEN_LOOPS = **Claude** (Lab 06 หรือเมื่อกลับมาแตะ UI) — OpenCode อ่านอย่างเดียวจนกว่าจะมี handoff ขากลับ
+
+## Review round 1 (2026-09-25 12:28 +07:00)
+
+เจ้าของทดสอบด้วย server จริง (`dist` + `DATA_DIR` ชั่วคราว) แล้วสั่งแก้ก่อนเปิด PR — สิ่งที่ยืนยันว่าใช้ได้อยู่แล้ว (validation 400, malformed JSON → "invalid request", 429 ที่ครั้งที่ 6, GET ไม่มี email) **ไม่แตะ** ให้ถดถอย
+
+แก้แล้ว:
+
+1. **`POST /api/contact` ไม่มี rate limit** — เพิ่มแล้ว โดยแยก rate-limit logic ออกเป็น `src/lib/rate-limit.ts` (`createRateLimiter`) ใช้ร่วมกันทั้ง `contact.ts` และ `guestbook.ts` แต่ **คนละ instance/bucket ต่อ route** (สร้าง limiter แยกในแต่ละไฟล์) — ยืนยัน manual: ยิง 7 ครั้ง → 5×201, 2×429
+2. **Rate limit key พึ่ง `clientAddress` อย่างเดียว (เสี่ยงหลัง Traefik)** — เพิ่ม `resolveClientKey()` ใน `rate-limit.ts`: อ่าน env `TRUST_PROXY`; ถ้า `"true"` ใช้ entry **ขวาสุด** ของ header `X-Forwarded-For` (ค่าที่ proxy ที่เราเชื่อถือเติมล่าสุด — ไม่ใช้ซ้ายสุดเพราะ client ปลอมได้) ไม่งั้น fallback ไป `clientAddress` · เพิ่ม `TRUST_PROXY=false` ใน `.env.example` พร้อมคอมเมนต์อธิบาย · **ไม่ได้แตะ** `astro.config.mjs` หรือ `Dockerfile` ตามคำสั่ง — บันทึกไว้ที่ `docs/OPEN_LOOPS.md` L13 ว่า **Lab 08 ต้องตั้ง `TRUST_PROXY=true` บน Coolify จริง แล้วยืนยันว่ารายบุคคลจริง** (ยังไม่ได้ทดสอบใน production)
+3. **`hits` Map โตไม่จำกัด** — `createRateLimiter` มี `prune()` ภายในที่ลบ key ที่ไม่มี timestamp เหลือในหน้าต่างแล้ว ทำงานทุกครั้งที่เรียก `isRateLimited()` (ไม่ต้อง cron แยก)
+4. **`listGuestbook()` ไม่มี LIMIT** — เพิ่ม `LIMIT 50` (เรียงจากใหม่สุด `ORDER BY id DESC`) · shape ของ response ไม่เปลี่ยน (`{ entries: [{ name, message, created_at }] }`)
+5. **เพิ่ม unit test** — `tests/rate-limit.test.ts` (ไม่ import `better-sqlite3` เลย จึงไม่เสี่ยง SIGSEGV บน CI): ครอบคลุมหน้าต่าง/เกินเพดาน, แยก bucket ต่อ key, prune คืน key ว่าง, และ `resolveClientKey` เลือก entry ขวาสุดเมื่อ `TRUST_PROXY=true` + fallback ทุกกรณี · `tests/labs/**` ไม่ถูกแตะ
+
+Verification รอบนี้: `npm run test:labs` 2/2 PASS · `npm test` 16/16 PASS (เพิ่ม 8 จาก rate-limit.test.ts) · `npm run build` PASS · manual curl ยืนยัน contact rate limit (5×201 → 429×2)
+
+Files เพิ่ม/แก้รอบนี้: `src/lib/rate-limit.ts` (ใหม่), `src/pages/api/contact.ts`, `src/pages/api/guestbook.ts`, `src/lib/db.ts` (LIMIT), `.env.example` (`TRUST_PROXY`), `tests/rate-limit.test.ts` (ใหม่), `docs/STATUS.md`, `docs/OPEN_LOOPS.md` (L13/L14)
