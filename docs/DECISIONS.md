@@ -53,3 +53,27 @@ Devil's Advocate ชี้ความเสี่ยงที่มีอยู
 - ไม่มี `demo@example.com`, บรรทัด Audience, error ดิบ, ปี หรือนามสกุลบนหน้าเว็บ (D10/D11) · footer มีข้อความความเห็นส่วนตัว
 - Guestbook แสดงผลด้วย `textContent` (D6 ฝั่ง UI) · ส่วน validate + rate limit ฝั่ง API เป็นงานของ OpenCode ใน Lab 05
 - สีผ่าน contrast AA ตาม D9 · ข้อความใช้ "ผม" ตาม D8
+
+## Lab 03 — Issues จาก Decisions
+
+สร้างผ่าน GitHub MCP (`issue_write`) ทั้ง 7 ใบใน `luffa/ai-multi-` · ตรวจซ้ำด้วย `gh issue list`
+
+| Issue # | Title | มาจาก Decision | ปิดใน Lab · Owner |
+|---|---|---|---|
+| #1 | [D12] Fix PROFILE parser to read multi-line sections | D12 (+D1, D5) | 04 · รอ L3 |
+| #2 | [D1][D7][D8] Home hero, 4-item nav and "ผม" voice | D1, D7, D8, D13 | 04 · Claude |
+| #3 | [D9] Theme: white base, red accent, AA contrast | D9 | 04 / 06 · Claude |
+| #4 | [D4][D5] "เทคโนโลยีที่ใช้" page: 3 groups + Knowledge | D4, D5 | 04 · Claude |
+| #5 | [D6] Guestbook UI: render entries with textContent | D6 (UI) | 04 · Claude |
+| #6 | [D6][D11] Guestbook/Contact API: validation, rate limit, no raw errors | D6 (API), D11 | 05 · OpenCode |
+| #7 | [D3][D10] Contact = GitHub link only · privacy footer · hide placeholders | D3, D10, D11 | 04 · Claude |
+
+ลำดับทำ: #1 ก่อน (blocker) → #2–#5, #7 (Lab 04) · #6 (Lab 05)
+
+## Lab 03 — MCP vs gh
+
+- **ความเร็ว:** MCP สร้าง issue ได้ในคำสั่งเดียว ส่ง body markdown ภาษาไทยยาว ๆ ได้โดยไม่ต้อง escape shell · `gh` เร็วกว่าสำหรับงานสั้น (`gh issue list` / `view`) แต่ body ยาวควรใช้ `--body-file`
+- **สิทธิ์:** MCP ใช้ PAT จาก `GITHUB_PERSONAL_ACCESS_TOKEN` (`.mcp.json`) · `gh` ใช้ OAuth login ใน keyring — เป็น credential คนละชุด scope ต่างกันได้ ต้องตรวจทั้งคู่ · repo ปลายทางต้องเป็นของผู้เรียน ไม่ใช่ `Onto-IQ/*`
+- **Audit trail:** ทั้งสองทางสร้าง issue ในนามบัญชีเดียวกัน (`luffa`) บน GitHub แยกไม่ออกว่าใครสั่ง · ร่องรอยฝั่ง MCP อยู่ใน transcript ของ Claude session ส่วนฝั่ง `gh` อยู่ใน shell history — จึงควรอ้าง D-id ใน title/body เสมอ
+- **ข้อผิดพลาดที่เจอ:** ตอน Lab 00 GitHub MCP โหลดรายการ tools ไม่ทันเวลา (timeout) ต้องเปิด `claude` ใหม่ · `gh repo set-default` ยังไม่ได้ตั้ง แต่ `gh` เดา repo จาก remote ได้ · ลิงก์ `docs/DECISIONS.md` ใน issue จะ 404 จนกว่าจะ push
+- **เมื่อไหร่ใช้อะไร:** ใช้ MCP เมื่อให้ agent แปลงเอกสารเป็น issue ทีละหลายใบ · ใช้ `gh` สำหรับตรวจผล สคริปต์ (`npm run create-issues`) CI และงานที่คนทำเอง
